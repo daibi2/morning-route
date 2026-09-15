@@ -5,7 +5,8 @@
 - 波次 0 — 脚手架：npm workspaces、Prisma 三表、CI、一键 `npm run dev`
 - 波次 1 — 认证垂直切片：JWT httpOnly Cookie、注册/登录/登出/`/me`、受保护首页、Playwright 登录闭环
 - 波次 2 — 习惯 CRUD
-- 波次 3 — 打卡与连续天数（本 PR）
+- 波次 3 — 打卡与连续天数
+- 波次 4a — 统计可视化（本 PR）
 
 ## 待审查 PR
 

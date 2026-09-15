@@ -6,15 +6,7 @@ import { HomePage } from './pages/HomePage';
 import { HabitsPage } from './pages/HabitsPage';
 import { LoginPage } from './pages/LoginPage';
 import { RegisterPage } from './pages/RegisterPage';
-
-function ComingSoon({ title }: { title: string }) {
-  return (
-    <section>
-      <h1 className="text-2xl font-semibold">{title}</h1>
-      <p className="mt-2 text-stone-600">即将在后续模块开放。</p>
-    </section>
-  );
-}
+import { StatsPage } from './pages/StatsPage';
 
 export function App() {
   return (
@@ -29,7 +21,7 @@ export function App() {
             <Route element={<AppLayout />}>
               <Route path="/" element={<HomePage />} />
               <Route path="/habits" element={<HabitsPage />} />
-              <Route path="/stats" element={<ComingSoon title="统计" />} />
+              <Route path="/stats" element={<StatsPage />} />
             </Route>
           </Route>
         </Routes>

@@ -4,6 +4,7 @@ import express, { type Express } from 'express';
 import { createAuthRouter } from './auth/authRouter';
 import { createCheckInsRouter } from './checkins/checkInsRouter';
 import { createHabitsRouter } from './habits/habitsRouter';
+import { createStatsRouter } from './stats/statsRouter';
 import type { AppDeps } from './config';
 import { errorHandler } from './middleware/errorHandler';
 
@@ -26,6 +27,7 @@ export function createApp(deps: AppDeps): Express {
   app.use('/api/auth', createAuthRouter(deps));
   app.use('/api/habits', createCheckInsRouter(deps));
   app.use('/api/habits', createHabitsRouter(deps));
+  app.use('/api/stats', createStatsRouter(deps));
 
   app.use(errorHandler);
   return app;
