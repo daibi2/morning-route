@@ -18,7 +18,7 @@
 3. https://github.com/daibi2/morning-route/pull/3
 4. https://github.com/daibi2/morning-route/pull/4
 5. https://github.com/daibi2/morning-route/pull/5
-6. 本分支 4b（push 后开 PR）
+6. https://github.com/daibi2/morning-route/pull/6
 
 ## 云端服务
 
