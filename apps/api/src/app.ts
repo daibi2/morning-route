@@ -2,6 +2,7 @@ import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import express, { type Express } from 'express';
 import { createAuthRouter } from './auth/authRouter';
+import { createHabitsRouter } from './habits/habitsRouter';
 import type { AppDeps } from './config';
 import { errorHandler } from './middleware/errorHandler';
 
@@ -22,6 +23,7 @@ export function createApp(deps: AppDeps): Express {
   });
 
   app.use('/api/auth', createAuthRouter(deps));
+  app.use('/api/habits', createHabitsRouter(deps));
 
   app.use(errorHandler);
   return app;

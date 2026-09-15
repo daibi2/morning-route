@@ -3,6 +3,7 @@ import { AuthProvider } from './auth/AuthContext';
 import { GuestRoute, ProtectedRoute } from './auth/ProtectedRoute';
 import { AppLayout } from './layout/AppLayout';
 import { HomePage } from './pages/HomePage';
+import { HabitsPage } from './pages/HabitsPage';
 import { LoginPage } from './pages/LoginPage';
 import { RegisterPage } from './pages/RegisterPage';
 
@@ -27,7 +28,7 @@ export function App() {
           <Route element={<ProtectedRoute />}>
             <Route element={<AppLayout />}>
               <Route path="/" element={<HomePage />} />
-              <Route path="/habits" element={<ComingSoon title="习惯" />} />
+              <Route path="/habits" element={<HabitsPage />} />
               <Route path="/stats" element={<ComingSoon title="统计" />} />
             </Route>
           </Route>
