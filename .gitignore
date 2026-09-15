@@ -1,0 +1,16 @@
+node_modules
+dist
+coverage
+playwright-report
+test-results
+*.db
+*.db-journal
+.env
+.env.local
+apps/api/.env
+.DS_Store
+*.log
+.vite
+.turbo
+.prisma
+apps/web/playwright/.auth
