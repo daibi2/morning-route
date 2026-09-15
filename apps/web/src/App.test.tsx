@@ -1,10 +1,20 @@
 import { render, screen } from '@testing-library/react';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { App } from './App';
 
+vi.stubGlobal(
+  'fetch',
+  vi.fn().mockResolvedValue({
+    ok: false,
+    status: 401,
+    json: async () => ({ error: { code: 'UNAUTHORIZED', message: '未登录' } }),
+  }),
+);
+
 describe('App', () => {
-  it('renders the morning habit heading', () => {
+  it('renders the login heading for guests', async () => {
+    window.history.pushState({}, '', '/login');
     render(<App />);
-    expect(screen.getByRole('heading', { name: '晨间习惯' })).toBeInTheDocument();
+    expect(await screen.findByRole('heading', { name: '登录' })).toBeInTheDocument();
   });
 });

@@ -1,15 +1,16 @@
-import cors from 'cors';
 import cookieParser from 'cookie-parser';
+import cors from 'cors';
 import express, { type Express } from 'express';
+import { createAuthRouter } from './auth/authRouter';
+import type { AppDeps } from './config';
 import { errorHandler } from './middleware/errorHandler';
 
-export function createApp(): Express {
+export function createApp(deps: AppDeps): Express {
   const app = express();
-  const webOrigin = process.env.WEB_ORIGIN ?? 'http://localhost:5173';
 
   app.use(
     cors({
-      origin: webOrigin,
+      origin: deps.webOrigin,
       credentials: true,
     }),
   );
@@ -19,6 +20,8 @@ export function createApp(): Express {
   app.get('/api/health', (_req, res) => {
     res.json({ ok: true as const });
   });
+
+  app.use('/api/auth', createAuthRouter(deps));
 
   app.use(errorHandler);
   return app;

@@ -1,11 +1,38 @@
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { AuthProvider } from './auth/AuthContext';
+import { GuestRoute, ProtectedRoute } from './auth/ProtectedRoute';
+import { AppLayout } from './layout/AppLayout';
+import { HomePage } from './pages/HomePage';
+import { LoginPage } from './pages/LoginPage';
+import { RegisterPage } from './pages/RegisterPage';
+
+function ComingSoon({ title }: { title: string }) {
+  return (
+    <section>
+      <h1 className="text-2xl font-semibold">{title}</h1>
+      <p className="mt-2 text-stone-600">即将在后续模块开放。</p>
+    </section>
+  );
+}
+
 export function App() {
   return (
-    <main className="mx-auto flex min-h-screen max-w-lg flex-col justify-center px-6">
-      <p className="text-sm font-medium uppercase tracking-[0.2em] text-sunrise-700">
-        Morning Route
-      </p>
-      <h1 className="mt-3 text-4xl font-semibold text-stone-900">晨间习惯</h1>
-      <p className="mt-3 text-stone-600">脚手架已就绪。认证与打卡将在后续模块接入。</p>
-    </main>
+    <BrowserRouter>
+      <AuthProvider>
+        <Routes>
+          <Route element={<GuestRoute />}>
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/register" element={<RegisterPage />} />
+          </Route>
+          <Route element={<ProtectedRoute />}>
+            <Route element={<AppLayout />}>
+              <Route path="/" element={<HomePage />} />
+              <Route path="/habits" element={<ComingSoon title="习惯" />} />
+              <Route path="/stats" element={<ComingSoon title="统计" />} />
+            </Route>
+          </Route>
+        </Routes>
+      </AuthProvider>
+    </BrowserRouter>
   );
 }

@@ -2,7 +2,8 @@
 
 ## 已完成模块
 
-- 波次 0 — 脚手架：npm workspaces、Prisma 三表、CI、一键 `npm run dev`（本 PR）
+- 波次 0 — 脚手架：npm workspaces、Prisma 三表、CI、一键 `npm run dev`
+- 波次 1 — 认证垂直切片（本 PR）：JWT httpOnly Cookie、注册/登录/登出/`/me`、受保护首页、Playwright 登录闭环
 
 ## 待审查 PR
 
