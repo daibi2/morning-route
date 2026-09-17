@@ -49,3 +49,13 @@ npm run db:seed
 - `/` — 今日打卡与连续天数（客户端传入本地 `YYYY-MM-DD`）
 - `/habits` — 习惯增删归档
 - `/stats` — 今日完成率与近 7 日柱状图
+
+## git使用注意事项
+
+- 本仓库按模块叠放（stacked）开发：一个模块一个分支、一个 PR，PR 的 base 指向上一模块分支，需按分支顺序依次合并（禁止把多个模块混进同一个 PR）。
+- 分支名沿用 agent 分支前缀 `cursor/<模块描述>-<短后缀>`（如 `cursor/habits-crud-acae`），禁止直接在 `main` 上提交。
+- 提交信息一句话说明改了什么（如 `Add habits CRUD API and management page.`），一次提交只做一件事。
+- 提交前先跑 `npm run lint` 与 `npm test`，本地全绿再提交；新增代码必须附带同目录测试（`foo.ts` → `foo.test.ts`）。
+- Schema 变更只能改 `prisma/schema.prisma` 并由 `prisma migrate` 生成迁移文件，`.sql` 迁移必须随代码一起提交，禁止手改数据库文件。
+- 不要提交 `.env`、`prisma/dev.db`（已由 `*.db` 忽略）、`node_modules/` 等本地文件；密钥只放 `.env`（模板见 `.env.example`），严禁写进代码或 README。
+- 合并前先 `git fetch` 同步当前 PR 的 base 分支并解决冲突；叠放分支只在自身分支上追加提交，禁止改写已推送历史（`git push --force`）。
