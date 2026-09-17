@@ -61,3 +61,4 @@ npm run db:seed
 - 注册/登录/新习惯名称依赖表单原生 `required` 校验，提交失败时保留用户已填内容，不清空表单。
 - 打卡日期一律用客户端本地 `YYYY-MM-DD`（`todayLocalDate()`），禁止用 `toISOString()` 截取，避免时区导致日期偏移。
 - 交互控件需带可访问名称（`aria-label` / 可见文案），便于端到端测试与无障碍访问。
+- 本节内容对应工单 dfc00c682f8d46ad8c754079541e8fd2（项目 zilun2-test / 仓库 morning-route），用于交互改动时的自查。
