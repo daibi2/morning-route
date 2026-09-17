@@ -6,7 +6,7 @@
 
 ## 项目结构
 
-npm workspaces 单仓多包，前端、后端、共享代码与数据库资产分开存放：
+npm workspaces 单仓多包，前端、后端、共享代码与数据库资产分开存放（仅列关键文件，非完整清单）：
 
 ```
 morning-route/
@@ -22,7 +22,8 @@ morning-route/
 │   │   │   └── test/             # Vitest 测试环境初始化
 │   │   ├── e2e/                  # Playwright：auth.spec.ts、full-flow.spec.ts
 │   │   ├── index.html
-│   │   └── vite.config.ts        # dev server 与 /api → 127.0.0.1:3001 代理
+│   │   ├── vite.config.ts        # dev server 与 /api → 127.0.0.1:3001 代理
+│   │   └── playwright.config.ts  # E2E：baseURL 与 webServer 启动配置
 │   └── api/                      # 后端：Express + TypeScript + Prisma
 │       └── src/
 │           ├── auth/             # 注册、登录、用户序列化
@@ -34,9 +35,11 @@ morning-route/
 │           ├── seed/             # 演示数据常量
 │           ├── test/             # 测试用 app 工厂
 │           ├── types/            # Express 类型扩展（express.d.ts）
-│           └── config.ts · app.ts · index.ts   # 配置、应用组装与启动入口
+│           ├── config.ts         # 服务配置：端口、JWT、数据库路径
+│           ├── app.ts            # Express 应用组装（中间件 + 路由 + 健康检查）
+│           └── index.ts          # 启动入口
 ├── packages/
-│   └── shared/                   # 前后端共享：DTO 类型、错误码、日期与连续天数
+│   └── shared/                   # 前后端共享（@morning-route/shared）：DTO 类型、错误码、日期与连续天数
 │       └── src/                  # index.ts（barrel）、types.ts、errors.ts、dates.ts、streak.ts
 ├── prisma/
 │   ├── schema.prisma             # User / Habit / CheckIn 数据模型
@@ -48,7 +51,7 @@ morning-route/
 └── package.json                  # 根脚本：dev / lint / format / test / test:e2e / db:*
 ```
 
-约定：新增源文件与测试同目录配对（`foo.ts` ↔ `foo.test.ts`，组件同理 `Foo.tsx` ↔ `Foo.test.tsx`）；可复用的跨端类型与工具优先放 `packages/shared`；数据库结构变更只走 `prisma migrate`。
+约定：新增源文件与测试同目录配对（`foo.ts` ↔ `foo.test.ts`，组件同理 `Foo.tsx` ↔ `Foo.test.tsx`，纯类型 / barrel 文件除外）；可复用的跨端类型与工具优先放 `packages/shared`；数据库结构变更只走 `prisma migrate`。
 
 ## 一键启动
 
