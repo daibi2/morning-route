@@ -4,6 +4,52 @@
 
 技术栈：React 18 + Vite + Tailwind、Express + TypeScript、Prisma + SQLite、JWT httpOnly Cookie、Vitest + Playwright、Recharts。
 
+## 项目结构
+
+npm workspaces 单仓多包，前端、后端、共享代码与数据库资产分开存放：
+
+```
+morning-route/
+├── apps/
+│   ├── web/                      # 前端：Vite + React 18 + Tailwind
+│   │   ├── src/
+│   │   │   ├── api/              # 后端接口封装（client.ts + 各领域请求）
+│   │   │   ├── auth/             # AuthContext 登录态 + ProtectedRoute 路由守卫
+│   │   │   ├── layout/           # AppLayout 应用外壳与导航
+│   │   │   ├── pages/            # Login / Register / Home / Habits / Stats 页面
+│   │   │   ├── main.tsx          # 应用入口（挂载 #root）
+│   │   │   ├── App.tsx           # 路由表
+│   │   │   └── test/             # Vitest 测试环境初始化
+│   │   ├── e2e/                  # Playwright：auth.spec.ts、full-flow.spec.ts
+│   │   ├── index.html
+│   │   └── vite.config.ts        # dev server 与 /api → 127.0.0.1:3001 代理
+│   └── api/                      # 后端：Express + TypeScript + Prisma
+│       └── src/
+│           ├── auth/             # 注册、登录、用户序列化
+│           ├── habits/           # 习惯增删归档（service + router）
+│           ├── checkins/         # 每日打卡：幂等写入与取消
+│           ├── stats/            # 近 7 日统计聚合
+│           ├── middleware/       # requireAuth、统一错误处理
+│           ├── lib/              # Prisma 客户端、JWT、asyncHandler、httpError
+│           ├── seed/             # 演示数据常量
+│           ├── test/             # 测试用 app 工厂
+│           ├── types/            # Express 类型扩展（express.d.ts）
+│           └── config.ts · app.ts · index.ts   # 配置、应用组装与启动入口
+├── packages/
+│   └── shared/                   # 前后端共享：DTO 类型、错误码、日期与连续天数
+│       └── src/                  # index.ts（barrel）、types.ts、errors.ts、dates.ts、streak.ts
+├── prisma/
+│   ├── schema.prisma             # User / Habit / CheckIn 数据模型
+│   ├── migrations/               # 迁移 SQL（仅由 prisma migrate 生成）
+│   └── seed.ts                   # 演示账号与习惯写入脚本
+├── .github/workflows/ci.yml      # CI：lint + Vitest + Playwright E2E
+├── PROJECT_CONTEXT.md            # 架构、领域模型与硬性约束
+├── PROGRESS.md                   # 分阶段进度记录
+└── package.json                  # 根脚本：dev / lint / format / test / test:e2e / db:*
+```
+
+约定：新增源文件与测试同目录配对（`foo.ts` ↔ `foo.test.ts`，组件同理 `Foo.tsx` ↔ `Foo.test.tsx`）；可复用的跨端类型与工具优先放 `packages/shared`；数据库结构变更只走 `prisma migrate`。
+
 ## 一键启动
 
 ```bash
