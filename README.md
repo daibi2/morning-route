@@ -49,3 +49,14 @@ npm run db:seed
 - `/` — 今日打卡与连续天数（客户端传入本地 `YYYY-MM-DD`）
 - `/habits` — 习惯增删归档
 - `/stats` — 今日完成率与近 7 日柱状图
+
+## UI交互注意事项444
+
+- 所有接口请求走同源 `/api` 代理，统一携带 `credentials: 'include'`；JWT 由服务端写入 httpOnly Cookie，前端不读取也不存储 token。
+- 接口报错就地渲染成红字提示（`text-red-700`），不使用 `alert`/`confirm` 打断流程；错误统一封装为 `ApiClientError`（携带 `code` / `message`），页面按需展示其 `message`。
+- 仅初始鉴权失败会回到登录页：`AuthContext` 启动时 `fetchMe()` 抛 `UNAUTHORIZED` 则清空登录态，`ProtectedRoute` 渲染 `<Navigate to="/login">`；页面内的读/刷新请求（习惯列表、统计）若返回 401 只展示错误文案、不会自动跳登录页，而打卡/归档/删除等写操作目前未捕获 rejection，新增逻辑需自行处理 401。
+- 首屏加载期间展示「加载中…」占位（`HomePage` / `HabitsPage` 由 `loading` 初值 `true` 控制，`StatsPage` 由 `overview === null` 控制），`ProtectedRoute` 在鉴权完成前同样显示「加载中…」；写操作触发的 `reload()` 不会重置该占位，需避免出现无反馈的空白页面。
+- 打卡、添加、归档、删除等写操作成功后必须重新拉取数据（`reload()`）再刷新界面，保证今日状态与连续天数一致。
+- 注册/登录/新习惯名称依赖表单原生 `required` 校验，提交失败时保留用户已填内容，不清空表单。
+- 打卡日期一律用客户端本地 `YYYY-MM-DD`（`todayLocalDate()`），禁止用 `toISOString()` 截取，避免时区导致日期偏移。
+- 交互控件需带可访问名称（`aria-label` / 可见文案），便于端到端测试与无障碍访问。
