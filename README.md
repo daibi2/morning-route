@@ -53,9 +53,9 @@ npm run db:seed
 ## UI交互注意事项666
 
 - 所有接口请求统一走同源 `/api` 代理并携带 `credentials: 'include'`；JWT 由服务端写入 httpOnly Cookie，前端不读取也不存储 token（见 `apps/web/src/api/client.ts`）。
-- 请求失败统一抛出 `ApiClientError`（携带 `code` / `message`），页面就地渲染红字提示（`text-red-700`），不使用 `alert` / `confirm` 打断流程。
+- HTTP 错误响应统一抛出 `ApiClientError`（携带 `code` / `message`），页面就地渲染红字提示（`text-red-700`），不使用 `alert` / `confirm` 打断流程；网络失败或响应体解析失败不是 `ApiClientError`，由各页面 `catch` 兜底成通用文案（如 `HomePage` / `StatsPage` 的「加载失败」）。
 - 仅初始鉴权失败会跳登录页：`AuthProvider` 启动时 `fetchMe()` 返回 `UNAUTHORIZED` 会清空登录态，`ProtectedRoute` / `GuestRoute` 分别重定向到 `/login` 与 `/`；已登录后的页面内请求（习惯列表、统计）拿到 401 只展示错误文案，不自动跳转。
-- 首屏加载期间展示「加载中…」占位：`ProtectedRoute` / `GuestRoute` 由鉴权 `loading` 控制，`HomePage` / `HabitsPage` 由 `loading` 初值 `true` 控制，`StatsPage` 由 `overview === null` 控制；写操作触发的 `reload()` 不重置该占位，需避免出现无反馈的空白页面。
+- 首屏加载期间展示「加载中…」占位：`ProtectedRoute` / `GuestRoute` 由鉴权 `loading` 控制，`HomePage` / `HabitsPage` 由 `loading` 初值 `true` 控制，`StatsPage` 由 `overview === null` 控制（其请求失败时 `overview` 仍为 `null`，会同时显示错误文案与该占位）；写操作触发的 `reload()` 不重置该占位，需避免出现无反馈的空白页面。
 - 打卡 / 添加 / 归档 / 删除等写操作成功后必须调用 `reload()` 重新拉取数据，保证今日状态、连续天数与统计一致。
 - 打卡日期一律使用客户端本地 `YYYY-MM-DD`（`todayLocalDate()`），禁止用 `toISOString()` 截取，避免时区导致日期偏移。
 - 交互控件需带可访问名称（`aria-label` 或可见文案），便于端到端测试与无障碍访问。
