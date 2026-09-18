@@ -49,3 +49,10 @@ npm run db:seed
 - `/` — 今日打卡与连续天数（客户端传入本地 `YYYY-MM-DD`）
 - `/habits` — 习惯增删归档
 - `/stats` — 今日完成率与近 7 日柱状图
+
+## 发布注意事项，非常重要
+
+- 发布前确认 `.env` 已按目标环境填好（`DATABASE_URL`、`JWT_SECRET`），禁止沿用本地默认值。
+- 发布前必须先执行 `npm run db:migrate` 应用最新 Prisma migration，避免表结构与代码不一致。
+- 发布后先访问 `/api/health` 确认服务健康，再验证注册登录与今日打卡主流程。
+- 回滚时需同步回退代码与数据库文件（SQLite `prisma/dev.db`），避免数据与代码版本错配。
