@@ -49,3 +49,15 @@ npm run db:seed
 - `/` — 今日打卡与连续天数（客户端传入本地 `YYYY-MM-DD`）
 - `/habits` — 习惯增删归档
 - `/stats` — 今日完成率与近 7 日柱状图
+
+## UI交互注意事项999
+
+- 所有接口请求统一走同源 `/api` 代理并携带 `credentials: 'include'`；JWT 由服务端写入 httpOnly Cookie，前端既不读取也不存储 token（见 `apps/web/src/api/client.ts`）。
+- HTTP 错误统一抛出 `ApiClientError`（携带 `code` / `message`），页面就地渲染红字提示（`text-red-700`），不使用 `alert` / `confirm` 打断流程；网络异常或响应体解析失败不是 `ApiClientError`，由各页面 `catch` 兜底为「加载失败」。
+- 仅初始鉴权失败会跳登录页：`AuthProvider` 启动时调用 `fetchMe()`，返回 `UNAUTHORIZED` 时清空登录态；`ProtectedRoute` / `GuestRoute` 在鉴权结束后按 `user` 重定向，鉴权未完成时先渲染「加载中…」。已登录后的页面内请求（习惯列表、统计）拿到 401 只展示错误文案，不自动跳转。
+- 首屏加载占位由各页面自持状态控制：`ProtectedRoute` / `GuestRoute` 用鉴权 `loading`，`HomePage` / `HabitsPage` 用 `loading` 初值 `true`，`StatsPage` 用 `overview === null`（其请求失败时占位与错误文案会同时出现）。
+- 打卡 / 新增 / 归档 / 删除成功后必须重新拉取数据（`reload()` / `toggle()`），保证今日状态、连续天数与统计口径一致；`reload()` 不会重置 `loading`，需避免出现无反馈的空白页面。
+- 打卡日期一律取客户端本地 `YYYY-MM-DD`（`todayLocalDate()`），不得用 `toISOString()` 截取，避免时区导致日期偏移。
+- 写操作目前只有登录 / 注册表单带 `disabled={submitting}`；打卡勾选框与「归档」「删除」按钮未做进行中禁用，连点可能触发重复提交，新增交互建议同步补上。
+- 交互控件需带可访问名称（`aria-label` 或可见文案），如 `aria-label={\`打卡 ${row.title}\`}`、`aria-label="新习惯名称"`，便于端到端测试与无障碍访问。
+- 本节内容对应工单 92324cfceffb4e92bfee5859d122e538（项目 zilun2-test / 仓库 morning-route），UI 交互改动前请据此自查。
