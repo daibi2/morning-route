@@ -53,12 +53,12 @@ npm run db:seed
 ## UI交互注意事项999
 
 - 接口统一走同源 `/api` 代理，`apiRequest` 固定 `credentials: 'include'`（`apps/web/src/api/client.ts`）；JWT 由服务端写入 httpOnly Cookie（`apps/api/src/auth/authRouter.ts`），前端不读取、不存储 token。
-- 接口失败统一抛 `ApiClientError`（携带 `code` / `message`），页面就地渲染红字提示（`text-red-700`），不使用 `alert` / `confirm` 打断流程；非 `ApiClientError`（网络异常、响应体解析失败等）兜底文案为「加载失败」。
-- 只有初始鉴权会自动跳转：`AuthProvider` 启动时调用 `fetchMe()`，返回 `UNAUTHORIZED` 时清空登录态；`ProtectedRoute` / `GuestRoute` 在鉴权 `loading` 结束后按 `user` 重定向到 `/login` 或 `/`，鉴权未完成时先渲染「加载中…」。
-- 已登录后的页面内请求（习惯列表、统计）遇到 401 只展示错误文案，不自动跳登录页；各页面分别维护 `error` 状态。
+- 接口失败统一抛 `ApiClientError`（携带 `code` / `message`），页面就地渲染红字提示（`text-red-700`），不使用 `alert` / `confirm` 打断流程；非 `ApiClientError`（网络异常、响应体解析失败等）兜底文案为：首屏 / 列表加载为「加载失败」，表单提交为「登录失败」「注册失败」「创建失败」。
+- 路由跳转仅两类触发：① `AuthProvider` 启动时 `fetchMe()` 返回 `UNAUTHORIZED`（或主动登出 `logout()`）清空登录态后，`ProtectedRoute` / `GuestRoute` 在鉴权 `loading` 结束时按 `user` 重定向到 `/login` 或 `/`；② 登录 / 注册成功后 `LoginPage` / `RegisterPage` 显式 `navigate('/', { replace: true })`。鉴权未完成时先渲染「加载中…」。
+- 已登录后的页面内请求（习惯列表、统计）遇到 401 只展示错误文案，不触发跳转回登录页；各页面分别维护 `error` 状态。
 - 首屏加载占位由各页面自持状态控制：`ProtectedRoute` / `GuestRoute` 用鉴权 `loading`，`HomePage` / `HabitsPage` 用初值为 `true` 的 `loading`，`StatsPage` 在 `overview === null` 时显示「加载中…」。
 - 打卡 / 新增 / 归档 / 删除成功后必须 `reload()` 重新拉取数据，保证今日状态、连续天数与统计口径一致；`reload()` 不会重置 `loading`，需避免出现无反馈的空白页面。
 - 打卡日期一律取客户端本地 `YYYY-MM-DD`（`todayLocalDate()`，见 `packages/shared/src/dates.ts`），不得用 `toISOString()` 截取，避免时区导致日期偏移。
-- 写操作目前只有登录 / 注册表单带 `disabled={submitting}`；打卡勾选框与「归档」「删除」按钮未做进行中禁用，且 `HomePage.toggle()`、习惯归档与删除路径未挂 `catch`，异常时既不提示也不回滚，连点或网络异常可能造成重复提交，新增交互建议同步补上。
+- 写操作约定：进行中应禁用对应控件，新增 / 修改写操作时须同步挂 `catch`，避免失败时用户得不到任何反馈。当前待改进项：`HomePage.toggle()`、习惯归档与删除路径未挂 `catch`，打卡勾选框与「归档」「删除」按钮未做进行中禁用（打卡接口本身幂等，重复提交无副作用）。
 - 交互控件需带可访问名称（`aria-label` 或可见文案，如 `打卡 ${row.title}`、「新习惯名称」），便于端到端测试与无障碍访问。
 - 本节对应工单 `3f1867807f3a47d68cc7fc272eb842b7`（zilun3-test / morning-route），用于 UI 交互改动自查。
