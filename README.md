@@ -59,6 +59,6 @@ npm run db:seed
 - 首屏加载占位由各页面自持状态控制：`ProtectedRoute` / `GuestRoute` 用鉴权 `loading`，`HomePage` / `HabitsPage` 用初值为 `true` 的 `loading`，`StatsPage` 在 `overview === null` 时显示「加载中…」。
 - 打卡 / 新增 / 归档 / 删除成功后必须 `reload()` 重新拉取数据，保证今日状态、连续天数与统计口径一致；`reload()` 不会重置 `loading`，需避免出现无反馈的空白页面。
 - 打卡日期一律取客户端本地 `YYYY-MM-DD`（`todayLocalDate()`，见 `packages/shared/src/dates.ts`），不得用 `toISOString()` 截取，避免时区导致日期偏移。
-- 写操作约定：进行中应禁用对应控件，新增 / 修改写操作时须同步挂 `catch`，避免失败时用户得不到任何反馈。当前待改进项：`HomePage.toggle()`、习惯归档与删除路径未挂 `catch`，打卡勾选框与「归档」「删除」按钮未做进行中禁用（打卡接口本身幂等，重复提交无副作用）。
+- 写操作约定：进行中应禁用对应控件，任何写操作（含删除）都须 `catch` 兜底，避免失败时用户得不到任何反馈。当前待改进项：`HomePage.toggle()`、习惯归档与删除路径未挂 `catch`；仅 `LoginPage` / `RegisterPage` 带 `disabled={submitting}`，打卡勾选框、「添加」提交按钮与「归档」「删除」按钮未做进行中禁用（打卡接口本身幂等，但新增习惯重复提交会产生重复数据）。
 - 交互控件需带可访问名称（`aria-label` 或可见文案，如 `打卡 ${row.title}`、「新习惯名称」），便于端到端测试与无障碍访问。
 - 本节对应工单 `3f1867807f3a47d68cc7fc272eb842b7`（zilun3-test / morning-route），用于 UI 交互改动自查。
