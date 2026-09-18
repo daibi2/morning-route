@@ -54,11 +54,11 @@ npm run db:seed
 
 - 所有接口请求走同源 `/api` 代理（dev 由 `vite.config.ts` 代理到 `127.0.0.1:3001`，线上由部署层反代），统一携带 `credentials: 'include'`；JWT 由服务端写入 httpOnly Cookie，前端不读取也不存储 token。
 - 读请求与表单提交（登录/注册/新增习惯）报错时就地渲染红字提示（`text-red-700`），不使用 `alert`/`confirm` 打断流程；错误统一封装为 `ApiClientError`（携带 `code` / `message`），页面按需展示其 `message`。
-- 仅初始鉴权会触发回登录页：`AuthContext` 启动时调用 `fetchMe()`，`UNAUTHORIZED` 清零登录态；`ProtectedRoute` 在鉴权结束后只要 `user === null` 就渲染 `<Navigate to="/login">`。页面内的读/刷新请求（习惯列表、统计）若返回 401 只展示错误文案、不会自动跳登录页；打卡/归档/删除/登出等写操作的 rejection 当前未捕获（新增习惯、登录、注册已捕获并提示），新增逻辑需自行处理 401。
+- 回登录页只由「登录态为空」驱动（初始鉴权失败或主动登出）：`AuthContext` 启动时调用 `fetchMe()`，`UNAUTHORIZED` 清零登录态；`ProtectedRoute` 在鉴权结束后只要 `user === null` 就渲染 `<Navigate to="/login">`。页面内的读/刷新请求（习惯列表、统计）若返回 401 只展示错误文案、不会自动跳登录页；打卡/归档/删除/登出等写操作的 rejection 当前未捕获（新增习惯、登录、注册已捕获并提示），新增逻辑需自行处理 401。
 - 首屏加载期间展示「加载中…」占位（`HomePage` / `HabitsPage` 由 `loading` 初值 `true` 控制，`ProtectedRoute` 在鉴权完成前同样显示「加载中…」）；`StatsPage` 没有独立 loading 态，以 `overview === null` 判断，出错时错误文案与「加载中…」会同时出现；写操作触发的 `reload()` 不会重置该占位，需避免出现无反馈的空白页面。
 - 打卡、添加、归档、删除等写操作成功后必须重新拉取数据（`reload()`）再刷新界面，保证今日状态与连续天数一致。
 - 写操作进行中应禁用对应控件（打卡勾选、归档/删除按钮当前未禁用），避免连点导致重复提交；`StatsPage` 仅在挂载时拉取一次数据，跨页签的写操作不会自动同步。
 - 注册/登录/新习惯名称依赖表单原生 `required` 校验，提交失败时保留用户已填内容，不清空表单。
-- 打卡日期一律用客户端本地 `YYYY-MM-DD`（`todayLocalDate()`），禁止用 `toISOString()` 截取，避免时区导致日期偏移（`toISOString()` 目前仅用于服务端写库时间戳）。
+- 打卡日期一律用客户端本地 `YYYY-MM-DD`（`todayLocalDate()`），禁止用 `toISOString()` 截取，避免时区导致日期偏移（`toISOString()` 目前仅用于服务端把已入库的时间字段（`createdAt`/`updatedAt`/`archivedAt`）序列化为 ISO 串）。
 - 交互控件需带可访问名称（`aria-label` / 可见文案），便于端到端测试与无障碍访问。
 - 本节内容对应工单 b62883491637446491eeffd0852ed499（项目 zilun2-test / 仓库 morning-route），用于交互改动时的自查。
