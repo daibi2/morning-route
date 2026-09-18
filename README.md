@@ -49,3 +49,16 @@ npm run db:seed
 - `/` — 今日打卡与连续天数（客户端传入本地 `YYYY-MM-DD`）
 - `/habits` — 习惯增删归档
 - `/stats` — 今日完成率与近 7 日柱状图
+
+## UI交互注意事项555
+
+- 接口调用统一走同源 `/api` 代理（`apiRequest`），固定 `credentials: 'include'`；JWT 由服务端写入 httpOnly Cookie，前端不读取、不存储 token。
+- 接口失败抛 `ApiClientError`（携带 `code` / `message`），页面就地渲染红字提示（`text-red-700`），不使用 `alert` / `confirm` 打断流程。
+- 除主动登出外，只有初始鉴权会自动回登录页：`AuthProvider` 启动时调用 `fetchMe()`，`ProtectedRoute` 在 `loading` 结束后只要 `user === null` 就跳转 `/login`（`GuestRoute` 反向处理）；页面内的读请求遇 401 只展示错误文案，不自动跳登录页。
+- 首屏加载显示「加载中…」占位：`ProtectedRoute` / `GuestRoute` 由 `loading` 控制，`HomePage` / `HabitsPage` 由 `loading` 初值 `true` 控制；`StatsPage` 没有占位，`overview === null` 时不渲染内容。写操作触发的 `reload()` 不重置该占位。
+- 打卡、添加、归档、删除等写操作成功后必须 `reload()` 重新拉取数据再刷新界面，保证今日状态与连续天数一致。
+- 写操作进行中应禁用对应控件（打卡勾选、归档/删除按钮目前未禁用），避免连点造成重复提交。
+- 注册/登录/新习惯名称依赖表单原生 `required` 校验，提交失败保留已填内容。
+- 打卡日期一律用客户端本地 `YYYY-MM-DD`（`todayLocalDate()`），禁止用 `toISOString()` 截取，避免时区偏移。
+- 交互控件需带可访问名称（`aria-label` / 可见文案，如「新习惯名称」），便于端到端测试与无障碍访问。
+- 本节对应工单 dfc00c682f8d46ad8c754079541e8fd2（zilun2-test / morning-route），用于交互改动自查。
