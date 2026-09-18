@@ -55,6 +55,6 @@ npm run db:seed
 - 打卡与统计的日期一律取客户端本地日期 `YYYY-MM-DD`（`packages/shared/src/dates.ts` 的 `todayLocalDate()`），不要在浏览器里用 `toISOString()` 截取，否则跨时区会整体偏移一天。
 - 未登录访问 `/` `/habits` `/stats` 会被 `ProtectedRoute` 重定向到 `/login`，已登录访问 `/login` `/register` 由 `GuestRoute` 重定向回 `/`；鉴权未完成时先渲染「加载中…」，不要提前展示页面内容。
 - 登录态走 JWT httpOnly Cookie：前端请求统一经 `apiRequest`（`apps/web/src/api/client.ts`）走同源 `/api` 代理并携带 `credentials: 'include'`，前端既不读取也不存储 token，禁止把 token 放进 localStorage。
-- 接口错误统一由服务端返回 `ErrorCode` + `message`，前端抛 `ApiClientError` 后就地渲染红字文案（读取类兜底「加载失败」，表单类为「登录失败」/「注册失败」），不使用 `alert` / `confirm` 打断流程。
+- 接口错误统一由服务端返回 `ErrorCode` + `message`，前端抛 `ApiClientError` 后由调用方就地把 `message` 渲染成红字文案：读取类兜底「加载失败」，表单类为「登录失败」/「注册失败」/「创建失败」，不使用 `alert` / `confirm` 打断流程。注意打卡、归档、删除这三条写路径目前未挂 `catch`，失败时只会产生未处理的 Promise rejection 而不出提示，新增交互时需补上。
 - 打卡 / 新增 / 归档 / 删除等写操作成功后必须重新拉取数据（`reload()` / `toggle()`），保证今日打卡状态、连续天数与近 7 日统计口径一致。
-- 交互控件需带可访问名称（可见文案或 `aria-label`，如 `aria-label={\`打卡 ${row.title}\`}`、`aria-label="新习惯名称"`），便于 Playwright E2E 定位与无障碍访问。
+- 交互控件需带可访问名称（可见文案或 `aria-label`，如 ``aria-label={`打卡 ${row.title}`}``、`aria-label="新习惯名称"`），便于 Playwright E2E 定位与无障碍访问。
