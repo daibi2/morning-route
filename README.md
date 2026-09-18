@@ -49,3 +49,12 @@ npm run db:seed
 - `/` — 今日打卡与连续天数（客户端传入本地 `YYYY-MM-DD`）
 - `/habits` — 习惯增删归档
 - `/stats` — 今日完成率与近 7 日柱状图
+
+## UI交互注意事项999
+
+- 接口请求统一走同源 `/api` 代理：开发环境下 `apps/web/vite.config.ts` 把 `/api` 代理到 API（默认 `127.0.0.1:3001`，为硬编码值，需与 `PORT` 保持一致）。由 `apps/web/src/api/client.ts` 的 `apiRequest` 统一封装并携带 `credentials: 'include'`；JWT 由服务端（`apps/api/src/auth/authRouter.ts`）写入 httpOnly Cookie，前端不读取、不存储 token。
+- 错误处理：HTTP 错误响应体匹配 `{ error: { code, message } }` 信封时抛 `ApiClientError`（携带 `code` / `message`），否则抛兜底的 `ApiClientError('INTERNAL_ERROR', '请求失败')`；`204` 无响应体时返回 `undefined`。注意网络异常与非 JSON 响应体不会被包装（分别为 `TypeError` / `SyntaxError`），调用方需自行兜底。新增 UI 交互请沿用该封装，不要绕过它直接 `fetch`。
+- 鉴权跳转由路由守卫负责（`apps/web/src/auth/ProtectedRoute.tsx`）：`ProtectedRoute` 未登录跳 `/login`，`GuestRoute` 已登录跳 `/`，鉴权 `loading` 期间先渲染「加载中…」。`AuthProvider` 启动时调用 `fetchMe()`：只有成功才写入用户，`UNAUTHORIZED` 与其他错误都不写入（其他错误目前被静默吞掉、不作区分），最终表现为未登录；用户显式 `logout()` 也会清空，但登出请求失败时不会清空本地态。
+- 打卡与统计的日期一律取客户端本地 `YYYY-MM-DD`（`packages/shared/src/dates.ts` 的 `todayLocalDate`），不要用 `toISOString()` 截取，避免时区导致日期偏移。
+- 写操作（打卡 / 新增 / 归档 / 删除）成功后必须重新拉取数据，保证今日状态、连续天数与统计口径一致。
+- 交互控件需带可访问名称（`aria-label` 或可见文案），便于端到端测试（`apps/web/e2e/`）与无障碍访问。
