@@ -49,3 +49,7 @@ npm run db:seed
 - `/` — 今日打卡与连续天数（客户端传入本地 `YYYY-MM-DD`）
 - `/habits` — 习惯增删归档
 - `/stats` — 今日完成率与近 7 日柱状图
+
+## 发布注意事项，非常重要
+
+发布前请确认：`npm run lint`、`npm test`、`npm run test:e2e` 全部通过。发布后请登录，核对 `/`、`/habits`、`/stats` 页面可正常访问。
