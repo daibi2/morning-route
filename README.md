@@ -49,3 +49,14 @@ npm run db:seed
 - `/` — 今日打卡与连续天数（客户端传入本地 `YYYY-MM-DD`）
 - `/habits` — 习惯增删归档
 - `/stats` — 今日完成率与近 7 日柱状图
+
+## UI交互注意事项666
+
+- 所有请求统一走同源 `/api` 代理并携带 `credentials: 'include'`；JWT 由服务端写入 httpOnly Cookie，前端不读取也不存储 token（`apps/web/src/api/client.ts`）。
+- 接口失败统一抛 `ApiClientError`（含 `code` / `message`），页面就地渲染红字提示（`text-red-700`），不用 `alert` / `confirm` 打断流程；网络错误或响应体解析失败不属于 `ApiClientError`，由各页面 `catch` 兜底为通用文案。
+- 仅初始鉴权失败会跳登录页：`AuthProvider` 启动时 `fetchMe()` 返回 `UNAUTHORIZED` 会清空登录态，`ProtectedRoute` / `GuestRoute` 分别重定向到 `/login` 与 `/`；已登录后页面内请求拿到 401 只展示错误文案，不自动跳转。
+- 首屏加载期间展示「加载中…」占位：`ProtectedRoute` / `GuestRoute` 由鉴权 `loading` 控制，`HomePage` / `HabitsPage` 由 `loading` 初值 `true` 控制，`StatsPage` 由 `overview === null` 控制；写操作触发的 `reload()` 不重置该占位。
+- 打卡 / 添加 / 归档 / 删除等写操作成功后必须调用 `reload()` 重新拉取数据，保证今日状态、连续天数与统计一致。
+- 打卡日期一律使用客户端本地 `YYYY-MM-DD`（`todayLocalDate()`），禁止用 `toISOString()` 截取，避免时区导致日期偏移。
+- 交互控件需带可访问名称（`aria-label` 或可见文案），便于端到端测试与无障碍访问。
+- 本节对应工单 84c91157c8ae486da1aad66701454a1e（项目 zilun2-test / 仓库 morning-route），UI 交互改动前请据此自查。
