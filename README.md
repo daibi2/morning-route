@@ -53,7 +53,7 @@ npm run db:seed
 ## 迭代注意事项，这个非常重要！
 
 - 只改与本次需求相关的文件，不要顺带重构无关代码，保证改动范围可审。
-- 数据库结构变更只走 `prisma migrate`（禁止手工改 `prisma/dev.db`），并在提交前跑通 `npm run db:migrate`。
+- 数据库结构变更只走 `prisma migrate`（禁止手工改 `prisma/dev.db`）：改 schema 用 `npm run db:migrate:dev` 生成迁移，提交前用 `npm run db:migrate` 应用并校验。
 - 提交前本地必须全绿：`npm run lint`、`npm test`、`npm run test:e2e`。
-- 前后端契约变更需同时改 `apps/api` 与 `apps/web`，保持请求/响应类型一致。
+- 前后端契约变更需同时改 `packages/shared`（共享类型/DTO 的单一来源）与 `apps/api`、`apps/web`，保持请求/响应类型一致。
 - 修复分支命名遵循 `fix-<issue_uid>-<slug>-<日期>-<seq>`，提交信息写清 Trace 段（需求 → 改动 → 验证）。
