@@ -49,3 +49,11 @@ npm run db:seed
 - `/` — 今日打卡与连续天数（客户端传入本地 `YYYY-MM-DD`）
 - `/habits` — 习惯增删归档
 - `/stats` — 今日完成率与近 7 日柱状图
+
+## 迭代注意事项，这个非常重要！
+
+- 只改与本次需求相关的文件，不要顺带重构无关代码，保证改动范围可审。
+- 数据库结构变更只走 `prisma migrate`（禁止手工改 `prisma/dev.db`），并在提交前跑通 `npm run db:migrate`。
+- 提交前本地必须全绿：`npm run lint`、`npm test`、`npm run test:e2e`。
+- 前后端契约变更需同时改 `apps/api` 与 `apps/web`，保持请求/响应类型一致。
+- 修复分支命名遵循 `fix-<issue_uid>-<slug>-<日期>-<seq>`，提交信息写清 Trace 段（需求 → 改动 → 验证）。
