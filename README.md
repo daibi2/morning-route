@@ -49,3 +49,12 @@ npm run db:seed
 - `/` — 今日打卡与连续天数（客户端传入本地 `YYYY-MM-DD`）
 - `/habits` — 习惯增删归档
 - `/stats` — 今日完成率与近 7 日柱状图
+
+## 迭代注意事项，非常重要
+
+迭代前请确认以下几点：
+
+- 提交流程：先同步最新 `main` 并按需 `npm install`；提交前在本机跑通 `npm run lint` 与 `npm test`，涉及页面或交互改动时再跑 `npm run test:e2e`（CI 的 `e2e` job 会在每个 PR 上无条件执行）。
+- 数据库：结构变更只走 `prisma migrate`，并把 `prisma/migrations/` 下的迁移文件随代码一起提交；不要绕过迁移直接改本地库文件（`prisma/dev.db` 为本地生成，已被 `.gitignore` 忽略）。
+- 接口契约：新增或修改接口时同步更新 `packages/shared` 中的 DTO 类型与 `ERROR_CODES` 错误码，保持前后端一致。
+- 分支：不要在 `main` 上直接提交；开发与修复分支沿用 `fix-<issue>-<slug>-<日期>-<seq>` 命名（叠放 PR 场景以 `PROGRESS.md` 记录的 base 分支为准）。
