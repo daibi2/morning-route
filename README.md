@@ -54,8 +54,10 @@ npm run db:seed
 
 迭代前请务必确认以下事项：
 
-- 提交流程：先同步最新 `main` 并按需 `npm install`；提交前在本机跑通 `npm run lint` 与 `npm test`，涉及页面或交互改动时再跑 `npm run test:e2e`（CI 的 `e2e` job 会在每个 PR 上无条件执行）。
-- 数据库：结构变更只走 `prisma migrate`，并把 `prisma/migrations/` 下的迁移文件随代码一起提交；不要绕过迁移直接改本地库文件（`prisma/dev.db` 为本地生成，已被 `.gitignore` 忽略）。
+- 提交流程：先同步最新 `main` 并按需 `npm install`；提交前在本机跑通 `npm run lint` 与 `npm test`，涉及页面或交互改动时再跑 `npm run test:e2e`。CI 的 `lint-and-test` 与 `e2e` 两个 job 会在每个 PR 上无条件执行。
+- 数据库：结构变更只走 Prisma 迁移——本地用 `npm run db:migrate:dev` 生成迁移文件，部署用 `npm run db:migrate`，并把 `prisma/migrations/` 下的迁移文件随代码一起提交；不要绕过迁移直接改本地库文件（`prisma/dev.db` 为本地生成，已被 `.gitignore` 忽略）。
 - 接口契约：新增或修改接口时同步更新 `packages/shared` 中的 DTO 类型与 `ERROR_CODES` 错误码，保持前后端一致。
 - 分支规范：不要在 `main` 上直接提交；开发与修复分支沿用 `fix-<issue>-<slug>-<日期>-<seq>` 命名。
 - 评审与发布：改动需本地自测通过后再提交评审，禁止跳过评审直接进入测试与发布环节。
+
+**迭代注意事项，这个非常重要！** 请务必逐条确认后再开始迭代。
