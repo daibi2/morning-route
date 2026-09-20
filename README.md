@@ -49,3 +49,10 @@ npm run db:seed
 - `/` — 今日打卡与连续天数（客户端传入本地 `YYYY-MM-DD`）
 - `/habits` — 习惯增删归档
 - `/stats` — 今日完成率与近 7 日柱状图
+
+## 构建注意事项，这个非常重要！
+
+- Node 版本需 ≥ 20（CI 使用 Node 22），首次构建前先执行 `npm install`（`postinstall` 会自动跑 `prisma generate`）。
+- 先按 `.env.example` 配好 `.env`，至少确认 `JWT_SECRET` 与 `DATABASE_URL`，否则构建后启动会失败。
+- 数据库 Schema 变更只走 `prisma migrate`，不要手改 `prisma/dev.db`。
+- 构建与提交前执行 `npm run lint` 和 `npm test`，全绿后再继续；端到端用 `npm run test:e2e`。
