@@ -57,3 +57,5 @@ npm run db:seed
 具体规范见 `PROJECT_CONTEXT.md` 的「硬性约束」与「运行时规则」；提交前请确保 `npm run lint` 与 `npm test` 均通过。
 
 编写码注意事项，这个非常重要！
+
+代码格式-----注意事项，这个非常重要！
