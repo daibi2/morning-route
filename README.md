@@ -7,7 +7,8 @@
 ## 一键启动
 
 ```bash
-cp .env.example .env   # 首次，已有 .env 可跳过
+cp .env.example .env             # 根目录：供 prisma migrate deploy 使用
+cp .env.example apps/api/.env    # API 进程工作目录是 apps/api，只读这里
 npm install
 npm run dev
 ```
@@ -54,8 +55,8 @@ npm run db:seed
 
 - Node 版本需 ≥ 20（见根 `package.json` 的 `engines`；CI 使用 Node 22）。
 - 本地首次构建前先执行 `npm install`（`postinstall` 会自动跑 `prisma generate`）；CI 使用 `npm ci`。
-- 环境变量要配**两处**：仓库根目录 `.env`（供 `npm run dev` 里的 `prisma migrate deploy` 使用）与 `apps/api/.env`（API 进程走 `dotenv/config`，工作目录是 `apps/api`）。只配根目录 `.env` 时 API 会因 `JWT_SECRET is required` 启动失败；缺少 `DATABASE_URL` 时会在 `prisma migrate` 或首次查询数据库时失败。
-- 数据库 Schema 变更只走 `npm run db:migrate`（`prisma migrate deploy`），不要手改 `prisma/dev.db`。
+- 环境变量要配**两处**：仓库根目录 `.env`（供 `npm run dev` 里的 `prisma migrate deploy` 使用）与 `apps/api/.env`（API 进程走 `dotenv/config`，工作目录是 `apps/api`），可执行 `cp .env.example .env && cp .env.example apps/api/.env`。只配根目录 `.env` 时 API 会因 `JWT_SECRET is required` 启动失败；缺少 `DATABASE_URL` 时会在 `prisma migrate` 或首次查询数据库时失败。
+- 数据库 Schema 变更只走 Prisma migration：本地改 schema 用 `npm run db:migrate:dev`（`prisma migrate dev`，生成并应用迁移），部署与 CI 用 `npm run db:migrate`（`prisma migrate deploy`）；不要手改 `prisma/dev.db`。
 - 提交前先跑 `npm run lint` 与 `npm test`（即 CI 的 lint-and-test 两步），全绿后再继续。
 - 只有前端需要构建：`npm run build -w apps/web`（`tsc -b && vite build`）；API 由 `tsx` 直接运行，无需构建。
 - 端到端测试用 `npm run test:e2e`；Linux 首次需先 `npx playwright install --with-deps chromium`（与 CI 一致）。
