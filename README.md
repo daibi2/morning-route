@@ -49,3 +49,9 @@ npm run db:seed
 - `/` — 今日打卡与连续天数（客户端传入本地 `YYYY-MM-DD`）
 - `/habits` — 习惯增删归档
 - `/stats` — 今日完成率与近 7 日柱状图
+
+## 构建注意事项，这个非常重要！
+
+- 首次启动前先执行 `npm install`（`postinstall` 会自动执行 `prisma generate`），并按「一键启动」准备好 `.env`。
+- 提交前必须通过 `npm run lint`（详见上文「脚本」一节）。
+- Schema 变更一律走 `prisma migrate`，禁止手改 `prisma/dev.db`。
