@@ -49,3 +49,9 @@ npm run db:seed
 - `/` — 今日打卡与连续天数（客户端传入本地 `YYYY-MM-DD`）
 - `/habits` — 习惯增删归档
 - `/stats` — 今日完成率与近 7 日柱状图
+
+## 格式要求，这个非常重要！
+
+- 提交前运行 `npm run lint`（ESLint + Prettier check）与 `npm test`，保持仓库格式统一。
+- 代码与文档统一使用 UTF-8 编码、LF 换行。
+- 变更保持小而聚焦，避免无关格式化噪音混入业务提交。
