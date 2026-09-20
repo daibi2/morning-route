@@ -52,7 +52,7 @@ npm run db:seed
 
 ## 构建注意事项，这个非常重要！
 
-- Node 版本需 ≥ 20（CI 使用 Node 22），首次构建前先执行 `npm install`（`postinstall` 会自动跑 `prisma generate`）。
-- 先按 `.env.example` 配好 `.env`，至少确认 `JWT_SECRET` 与 `DATABASE_URL`，否则构建后启动会失败。
+- Node 版本需 ≥ 20（见根 `package.json` 的 `engines`，CI 使用 Node 22），首次构建前先执行 `npm install`（`postinstall` 会自动跑 `prisma generate`）。
+- 先按 `.env.example` 配好 `.env`：缺少 `JWT_SECRET` 时 API 启动即报错；缺少 `DATABASE_URL` 时会在 `prisma migrate` 或首次查询数据库时失败。
 - 数据库 Schema 变更只走 `prisma migrate`，不要手改 `prisma/dev.db`。
-- 构建与提交前执行 `npm run lint` 和 `npm test`，全绿后再继续；端到端用 `npm run test:e2e`。
+- 构建与提交前执行 `npm run lint` 和 `npm test`，全绿后再继续；前端构建用 `npm run build -w apps/web`，端到端用 `npm run test:e2e`（首次需先 `npx playwright install chromium`）。
