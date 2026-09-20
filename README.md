@@ -49,3 +49,9 @@ npm run db:seed
 - `/` — 今日打卡与连续天数（客户端传入本地 `YYYY-MM-DD`）
 - `/habits` — 习惯增删归档
 - `/stats` — 今日完成率与近 7 日柱状图
+
+## 编码注意事项
+
+具体规范见 `PROJECT_CONTEXT.md` 的「硬性约束」与「运行时规则」；提交前请确保 `npm run lint` 与 `npm test` 均通过。
+
+编码注意事项，这个非常重要！
