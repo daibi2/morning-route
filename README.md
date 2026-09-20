@@ -52,7 +52,10 @@ npm run db:seed
 
 ## 构建注意事项，这个非常重要！
 
-- Node 版本需 ≥ 20（见根 `package.json` 的 `engines`，CI 使用 Node 22），首次构建前先执行 `npm install`（`postinstall` 会自动跑 `prisma generate`）。
-- 先按 `.env.example` 配好 `.env`：缺少 `JWT_SECRET` 时 API 启动即报错；缺少 `DATABASE_URL` 时会在 `prisma migrate` 或首次查询数据库时失败。
-- 数据库 Schema 变更只走 `prisma migrate`，不要手改 `prisma/dev.db`。
-- 构建与提交前执行 `npm run lint` 和 `npm test`，全绿后再继续；前端构建用 `npm run build -w apps/web`，端到端用 `npm run test:e2e`（首次需先 `npx playwright install chromium`）。
+- Node 版本需 ≥ 20（见根 `package.json` 的 `engines`；CI 使用 Node 22）。
+- 本地首次构建前先执行 `npm install`（`postinstall` 会自动跑 `prisma generate`）；CI 使用 `npm ci`。
+- 环境变量要配**两处**：仓库根目录 `.env`（供 `npm run dev` 里的 `prisma migrate deploy` 使用）与 `apps/api/.env`（API 进程走 `dotenv/config`，工作目录是 `apps/api`）。只配根目录 `.env` 时 API 会因 `JWT_SECRET is required` 启动失败；缺少 `DATABASE_URL` 时会在 `prisma migrate` 或首次查询数据库时失败。
+- 数据库 Schema 变更只走 `npm run db:migrate`（`prisma migrate deploy`），不要手改 `prisma/dev.db`。
+- 提交前先跑 `npm run lint` 与 `npm test`（即 CI 的 lint-and-test 两步），全绿后再继续。
+- 只有前端需要构建：`npm run build -w apps/web`（`tsc -b && vite build`）；API 由 `tsx` 直接运行，无需构建。
+- 端到端测试用 `npm run test:e2e`；Linux 首次需先 `npx playwright install --with-deps chromium`（与 CI 一致）。
