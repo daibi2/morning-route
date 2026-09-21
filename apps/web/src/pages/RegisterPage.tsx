@@ -56,13 +56,27 @@ export function RegisterPage() {
           />
         </label>
         {error ? <p className="text-sm text-red-700">{error}</p> : null}
-        <button
-          type="submit"
-          disabled={submitting}
-          className="w-full rounded-lg bg-sunrise-500 px-4 py-2 font-medium text-white hover:bg-sunrise-700 disabled:opacity-60"
+        <div
+          data-testid="register-submit-row"
+          className="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-3"
         >
-          注册
-        </button>
+          <button
+            type="submit"
+            disabled={submitting}
+            aria-describedby="register-hint"
+            className="w-full rounded-lg bg-sunrise-500 px-4 py-2 font-medium text-white hover:bg-sunrise-700 disabled:opacity-60 sm:w-auto sm:shrink-0"
+          >
+            注册
+          </button>
+          <p
+            id="register-hint"
+            data-testid="register-hint"
+            className="text-xs leading-relaxed text-stone-500"
+          >
+            注册说明：填写邮箱与密码即可完成注册，密码至少 8
+            位；注册成功后自动登录并进入今日打卡页。
+          </p>
+        </div>
       </form>
       <p className="mt-6 text-sm text-stone-600">
         已有账号？{' '}
