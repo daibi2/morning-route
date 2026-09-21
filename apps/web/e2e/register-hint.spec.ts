@@ -3,6 +3,8 @@ import { expect, test } from '@playwright/test';
 test('register hint copy and help icon sit to the right of the submit button on desktop', async ({
   page,
 }) => {
+  // 显式固定桌面视口（≥ Tailwind sm=640px），否则新增移动端 project 时本用例会静静失效
+  await page.setViewportSize({ width: 1280, height: 720 });
   await page.goto('/register');
 
   const button = page.getByRole('button', { name: '注册' });
@@ -33,10 +35,18 @@ test('register hint copy and help icon sit to the right of the submit button on 
   await icon.focus();
   await expect(tooltip).toBeVisible();
 
-  // 帮助图标是 type="button"，点击它不得提交注册表单
-  await page.getByLabel('邮箱').fill('hint@example.com');
+  // 帮助图标是 type="button"，点击它不得提交注册表单。
+  // 不能只靠 toHaveURL：提交是异步的，断言首次求值时 URL 仍为 /register 就会立即通过，
+  // 因此改为直接断言「没有发出 /api/auth/register 请求」，并用唯一邮箱避免复用库 409 干扰。
+  let registerRequested = false;
+  page.on('request', (req) => {
+    if (req.url().includes('/api/auth/register')) registerRequested = true;
+  });
+  await page.getByLabel('邮箱').fill(`hint-${Date.now()}@example.com`);
   await page.getByLabel('密码').fill('password1');
   await icon.click();
+  await page.waitForLoadState('networkidle');
+  expect(registerRequested).toBe(false);
   await expect(page).toHaveURL(/\/register$/);
 });
 

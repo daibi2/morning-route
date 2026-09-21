@@ -71,7 +71,8 @@ describe('RegisterPage', () => {
     // 无障碍名称刻意不含「注册」二字：仓库既有 E2E 用 getByRole('button', { name: '注册' })
     // 定位提交按钮，Playwright 名称匹配是子串匹配，图标名称含「注册」会命中两个元素导致严格模式报错。
     expect(icon).toHaveAttribute('aria-label', '查看填写说明');
-    // 与上一行同义的不变式：名称含「注册」的按钮必须唯一（RTL 此处为精确匹配，/注册/ 才等价于 Playwright 的子串匹配）
+    // 更强的守护约束：名称含「注册」的按钮必须唯一
+    // （RTL 此处为精确匹配，/注册/ 才等价于 Playwright 的子串匹配）
     expect(screen.getAllByRole('button', { name: /注册/ })).toHaveLength(1);
 
     // 图标必须显式声明 type="button"，否则在 form 内默认 submit，点击帮助图标会误提交注册表单
@@ -79,7 +80,8 @@ describe('RegisterPage', () => {
     await user.click(icon);
     expect(register).not.toHaveBeenCalled();
 
-    // 「?」图标默认不展示明细，悬停 / 聚焦时弹出 tooltip，明细文案在其中
+    // 「?」图标默认不展示明细，由悬停 / 聚焦弹出（jsdom 无样式引擎，此处只能断言驱动该行为的 class；
+    // 真实交互与几何关系见 e2e/register-hint.spec.ts）
     expect(tooltip).toHaveClass('hidden');
     expect(tooltip).toHaveClass('group-hover:block');
     expect(tooltip).toHaveClass('group-focus-within:block');
