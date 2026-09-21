@@ -56,13 +56,16 @@ export function RegisterPage() {
           />
         </label>
         {error ? <p className="text-sm text-red-700">{error}</p> : null}
-        <button
-          type="submit"
-          disabled={submitting}
-          className="w-full rounded-lg bg-sunrise-500 px-4 py-2 font-medium text-white hover:bg-sunrise-700 disabled:opacity-60"
-        >
-          注册
-        </button>
+        <div className="flex items-center gap-3">
+          <button
+            type="submit"
+            disabled={submitting}
+            className="shrink-0 rounded-lg bg-sunrise-500 px-6 py-2 font-medium text-white hover:bg-sunrise-700 disabled:opacity-60"
+          >
+            注册
+          </button>
+          <p className="text-sm text-stone-600">注册详细说明，你需要到百度去查看文档</p>
+        </div>
       </form>
       <p className="mt-6 text-sm text-stone-600">
         已有账号？{' '}
