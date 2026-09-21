@@ -56,10 +56,7 @@ export function RegisterPage() {
           />
         </label>
         {error ? <p className="text-sm text-red-700">{error}</p> : null}
-        <div
-          data-testid="register-submit-row"
-          className="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-3"
-        >
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-3">
           <button
             type="submit"
             disabled={submitting}
@@ -69,17 +66,12 @@ export function RegisterPage() {
             注册
           </button>
           <div className="flex items-center gap-1.5">
-            <p
-              id="register-hint"
-              data-testid="register-hint"
-              className="text-xs leading-relaxed text-stone-500"
-            >
+            <p id="register-hint" className="text-xs leading-relaxed text-stone-500">
               注册详细说明请参考
             </p>
             <span className="group relative inline-flex">
               <button
                 type="button"
-                data-testid="register-hint-icon"
                 aria-label="查看填写说明"
                 aria-describedby="register-hint-detail"
                 className="flex h-5 w-5 cursor-help items-center justify-center rounded-full border border-stone-400 text-[11px] font-semibold leading-none text-stone-500 transition-colors hover:border-sunrise-500 hover:text-sunrise-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-sunrise-400"
@@ -89,8 +81,7 @@ export function RegisterPage() {
               <span
                 id="register-hint-detail"
                 role="tooltip"
-                data-testid="register-hint-tooltip"
-                className="pointer-events-none absolute bottom-full left-1/2 z-10 mb-2 hidden w-60 -translate-x-1/2 rounded-lg bg-stone-900 px-3 py-2 text-xs leading-relaxed text-white shadow-lg group-hover:block group-focus-within:block"
+                className="pointer-events-none absolute left-1/2 top-full z-10 mt-2 hidden w-60 -translate-x-1/2 rounded-lg bg-stone-900 px-3 py-2 text-xs leading-relaxed text-white shadow-lg group-hover:block group-focus-within:block sm:bottom-full sm:top-auto sm:mb-2 sm:mt-0"
               >
                 邮箱需为有效地址，密码至少 8 位；注册成功后自动登录并进入今日打卡页。
               </span>
