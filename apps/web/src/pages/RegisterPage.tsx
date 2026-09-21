@@ -65,7 +65,7 @@ export function RegisterPage() {
             注册
           </button>
           <p className="text-sm text-stone-600">
-            注册详细说明与解释，后续你需要到百度去查看文档----
+            注册详细说明，------你需要到百度去查看文档----！！！！
           </p>
         </div>
       </form>
