@@ -33,16 +33,17 @@ describe('RegisterPage', () => {
     expect(register).toHaveBeenCalledWith('new@example.com', 'password1');
   });
 
-  it('shows the registration help text to the right of the submit button', () => {
+  it('shows the registration help link to the right of the submit button and points it at the baidu doc', () => {
     render(
       <MemoryRouter>
         <RegisterPage />
       </MemoryRouter>,
     );
     const button = screen.getByRole('button', { name: '注册' });
-    const help = screen.getByText('注册详细说明，你需要到百度去查看文档');
-    expect(help).toBeInTheDocument();
-    // 文案与按钮同父容器且 DOM 顺序在按钮之后；视觉上的「右侧」由 e2e 截图验证
+    const help = screen.getByRole('link', { name: '注册详细说明，你需要到百度去查看文档----' });
+    expect(help).toHaveAttribute('href', 'https://www.baidu.com');
+    // 文案与按钮同父容器且 DOM 顺序在按钮之后；「位于右侧」是视觉呈现，
+    // jsdom 无法断言布局，由部署环境的真实浏览器实测核验（仓库内无视觉回归用例）。
     expect(help.parentElement).toBe(button.parentElement);
     expect(button.compareDocumentPosition(help) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
   });

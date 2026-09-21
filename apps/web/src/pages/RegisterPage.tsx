@@ -64,7 +64,12 @@ export function RegisterPage() {
           >
             注册
           </button>
-          <p className="text-sm text-stone-600">注册详细说明，你需要到百度去查看文档</p>
+          <a
+            className="text-sm text-stone-600 underline underline-offset-2 hover:text-sunrise-700"
+            href="https://www.baidu.com"
+          >
+            注册详细说明，你需要到百度去查看文档----
+          </a>
         </div>
       </form>
       <p className="mt-6 text-sm text-stone-600">
