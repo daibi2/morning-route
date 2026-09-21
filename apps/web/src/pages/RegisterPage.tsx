@@ -56,13 +56,38 @@ export function RegisterPage() {
           />
         </label>
         {error ? <p className="text-sm text-red-700">{error}</p> : null}
-        <button
-          type="submit"
-          disabled={submitting}
-          className="w-full rounded-lg bg-sunrise-500 px-4 py-2 font-medium text-white hover:bg-sunrise-700 disabled:opacity-60"
-        >
-          注册
-        </button>
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-3">
+          <button
+            type="submit"
+            disabled={submitting}
+            aria-describedby="register-hint"
+            className="w-full rounded-lg bg-sunrise-500 px-4 py-2 font-medium text-white hover:bg-sunrise-700 disabled:opacity-60 sm:w-auto sm:shrink-0"
+          >
+            注册
+          </button>
+          <div className="flex items-center gap-1.5">
+            <p id="register-hint" className="text-xs leading-relaxed text-stone-500">
+              注册详细说明请参考
+            </p>
+            <span className="group relative inline-flex">
+              <button
+                type="button"
+                aria-label="查看填写说明"
+                aria-describedby="register-hint-detail"
+                className="flex h-5 w-5 cursor-help items-center justify-center rounded-full border border-stone-400 text-[11px] font-semibold leading-none text-stone-500 transition-colors hover:border-sunrise-500 hover:text-sunrise-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-sunrise-400"
+              >
+                ?
+              </button>
+              <span
+                id="register-hint-detail"
+                role="tooltip"
+                className="pointer-events-none absolute left-1/2 top-full z-10 mt-2 hidden w-60 -translate-x-1/2 rounded-lg bg-stone-900 px-3 py-2 text-xs leading-relaxed text-white shadow-lg group-hover:block group-focus-within:block sm:bottom-full sm:top-auto sm:mb-2 sm:mt-0"
+              >
+                邮箱需为有效地址，密码至少 8 位；注册成功后自动登录并进入今日打卡页。
+              </span>
+            </span>
+          </div>
+        </div>
       </form>
       <p className="mt-6 text-sm text-stone-600">
         已有账号？{' '}
