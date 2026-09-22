@@ -47,7 +47,7 @@ describe('RegisterPage', () => {
     expect(button.compareDocumentPosition(help) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
   });
 
-  it('places the extra test copy in the same row container after the submit button', () => {
+  it('renders the extra test copy in the same container as the submit button, after it in DOM order', () => {
     render(
       <MemoryRouter>
         <RegisterPage />
@@ -57,7 +57,8 @@ describe('RegisterPage', () => {
     const extra = screen.getByText('增加叶宇皓的测试');
     expect(extra).toBeInTheDocument();
     // jsdom 不做布局计算，这里只锁定结构不变量：同一父容器 + DOM 顺序在按钮之后。
-    // 「同一行内位于按钮右侧」这一视觉验收点由 e2e 几何断言（boundingBox 比较）+ 截图守护。
+    // 视觉上的「与按钮同一行且位于其右侧」需要真实布局，由 apps/web/e2e/register-extra-copy.spec.ts
+    // 的 boundingBox 几何断言守护；本文件不声称已覆盖该验收点。
     expect(extra.parentElement).toBe(button.parentElement);
     expect(button.compareDocumentPosition(extra) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
   });
