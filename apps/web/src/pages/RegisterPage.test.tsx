@@ -46,4 +46,18 @@ describe('RegisterPage', () => {
     expect(help.parentElement).toBe(button.parentElement);
     expect(button.compareDocumentPosition(help) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
   });
+
+  it('shows the extra test copy to the right of the submit button', () => {
+    render(
+      <MemoryRouter>
+        <RegisterPage />
+      </MemoryRouter>,
+    );
+    const button = screen.getByRole('button', { name: '注册' });
+    const extra = screen.getByText('增加叶宇皓的测试');
+    expect(extra).toBeInTheDocument();
+    // 与按钮同父容器且 DOM 顺序在按钮之后，即视觉上的「注册按钮右侧」
+    expect(extra.parentElement).toBe(button.parentElement);
+    expect(button.compareDocumentPosition(extra) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+  });
 });
