@@ -3,6 +3,14 @@ import { Link, useNavigate } from 'react-router-dom';
 import { ApiClientError } from '../api/client';
 import { useAuth } from '../auth/AuthContext';
 
+/**
+ * 提交按钮右侧的「注册详细说明」文案，逐字符对齐工单原文：
+ * 6 个半角连字符 U+002D + 4 个全角感叹号 U+FF01（易被误写成全角「－」或半角「!」）。
+ * 抽成具名常量便于单测固化码点契约、避免后续再次被「对齐文案」误改。
+ */
+export const REGISTER_HELP_TEXT =
+  '\u6ce8\u518c\u8be6\u7ec6\u8bf4\u660e\uff0c------\u4f60\u9700\u8981\u5230\u767e\u5ea6\u53bb\u67e5\u770b\u6587\u6863----\uff01\uff01\uff01\uff01';
+
 export function RegisterPage() {
   const { register } = useAuth();
   const navigate = useNavigate();
@@ -56,7 +64,7 @@ export function RegisterPage() {
           />
         </label>
         {error ? <p className="text-sm text-red-700">{error}</p> : null}
-        <div className="flex items-center gap-3">
+        <div className="flex flex-wrap items-center gap-3">
           <button
             type="submit"
             disabled={submitting}
@@ -64,8 +72,8 @@ export function RegisterPage() {
           >
             注册
           </button>
-          <p className="text-sm text-stone-600">
-            注册详细说明，------你需要到百度去查看文档----！！！！
+          <p className="text-sm text-stone-600" data-testid="register-help">
+            {REGISTER_HELP_TEXT}
           </p>
         </div>
       </form>
