@@ -64,7 +64,10 @@ export function RegisterPage() {
           />
         </label>
         {error ? <p className="text-sm text-red-700">{error}</p> : null}
-        <div className="flex flex-wrap items-center gap-3">
+        {/* 必须保持 nowrap：文案 max-content 宽 ~356px + 按钮 80px + gap 12px 已超过表单
+            max-w-md(400px) 的内容宽，一旦允许 flex-wrap，文案会整体折到按钮「下方」，
+            违背工单「按钮右侧」的验收点；nowrap 下文案在按钮右侧收缩并内部折行。 */}
+        <div className="flex items-center gap-3">
           <button
             type="submit"
             disabled={submitting}
