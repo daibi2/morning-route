@@ -13,4 +13,6 @@ apps/api/.env
 .vite
 .turbo
 .prisma
+.codegraph
+*.tsbuildinfo
 apps/web/playwright/.auth
