@@ -3,6 +3,12 @@ import { Link, useNavigate } from 'react-router-dom';
 import { ApiClientError } from '../api/client';
 import { useAuth } from '../auth/AuthContext';
 
+/**
+ * /register 提交按钮右侧的说明文案（工单验收点：逐字对齐工单原文）。
+ * 抽为常量供渲染层与单测/E2E 共同引用，避免渲染文案被逐字改坏而无人察觉。
+ */
+export const REGISTER_HELP_TEXT = '注册详细说明，------你需要到百度去查看文档----！！！！';
+
 export function RegisterPage() {
   const { register } = useAuth();
   const navigate = useNavigate();
@@ -64,8 +70,8 @@ export function RegisterPage() {
           >
             注册
           </button>
-          <p className="text-sm text-stone-600">
-            注册详细说明，------你需要到百度去查看文档----！！！！
+          <p data-testid="register-help-text" className="text-sm text-stone-600">
+            {REGISTER_HELP_TEXT}
           </p>
         </div>
       </form>
