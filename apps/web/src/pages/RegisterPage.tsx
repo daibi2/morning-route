@@ -64,9 +64,7 @@ export function RegisterPage() {
           >
             注册
           </button>
-          <p className="text-sm text-stone-600">
-            注册详细说明，------你需要到百度去查看文档----！！！！
-          </p>
+          <p className="text-sm text-stone-600">----去上面查看怎么用-----</p>
         </div>
       </form>
       <p className="mt-6 text-sm text-stone-600">
