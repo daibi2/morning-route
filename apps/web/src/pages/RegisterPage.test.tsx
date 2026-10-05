@@ -46,5 +46,7 @@ describe('RegisterPage', () => {
     // 视觉上的「右侧」由 e2e/register-help.spec.ts 的 bounding box 断言验证
     expect(help.parentElement).toBe(button.parentElement);
     expect(button.compareDocumentPosition(help) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    // 旧文案必须已被替换而非并存（工单为「替换文案」，不得遗留旧说明）
+    expect(screen.queryByText(/注册详细说明|百度去查看/)).toBeNull();
   });
 });
