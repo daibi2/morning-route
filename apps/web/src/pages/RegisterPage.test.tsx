@@ -40,9 +40,11 @@ describe('RegisterPage', () => {
       </MemoryRouter>,
     );
     const button = screen.getByRole('button', { name: '注册' });
-    const help = screen.getByText('注册详细说明，------你需要到百度去查看文档----！！！！');
-    expect(help).toBeInTheDocument();
-    // 文案与按钮同父容器且 DOM 顺序在按钮之后；视觉上的「右侧」由 e2e 截图验证
+    const help = screen.getByTestId('register-help');
+    expect(help.textContent).toBe('注册详细说明请参考');
+    // 旧说明不得残留（防止「只加不删」回归）
+    expect(screen.queryByText(/百度去查看文档/)).toBeNull();
+    // 文案与按钮同父容器且 DOM 顺序在按钮之后；视觉上的「右侧」由 e2e 的 boundingBox 断言验证
     expect(help.parentElement).toBe(button.parentElement);
     expect(button.compareDocumentPosition(help) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
   });
