@@ -62,7 +62,7 @@ npm run db:seed
 
 迭代前请确认以下几点：
 
-- 提交流程：先同步最新 `main` 并按需 `npm install`；提交前在本机跑通 `npm run lint` 与 `npm test`，涉及页面或交互改动时再跑 `npm run test:e2e`（CI 的 `e2e` job 会在每个 PR 上无条件执行）。
-- 数据库：结构变更只走 `prisma migrate`，并把 `prisma/migrations/` 下的迁移文件随代码一起提交；不要绕过迁移直接改本地库文件（`prisma/dev.db` 为本地生成，已被 `.gitignore` 忽略）。
-- 接口契约：新增或修改接口时同步更新 `packages/shared` 中的 DTO 类型与 `ERROR_CODES` 错误码，保持前后端一致。
-- 分支：不要在 `main` 上直接提交；开发与修复分支沿用 `fix-<issue>-<slug>-<日期>-<seq>` 命名（叠放 PR 场景以 `PROGRESS.md` 记录的 base 分支为准）。
+- 提交流程：先同步目标分支（通常为 `main`，叠放 PR 时为被依赖的上游分支）；首次或依赖变更后执行 `npm ci`（`postinstall` 会生成 Prisma Client）；提交前按「编码注意事项」跑通 `npm run lint` 与 `npm test`，页面/交互改动再跑 `npm run test:e2e`（首次需 `npx playwright install chromium`）；CI 各 job 的触发条件以 `.github/workflows/ci.yml` 为准。
+- 数据库：修改 `prisma/schema.prisma` 后用 `npm run db:migrate:dev` 生成迁移，`prisma/migrations/` 下的产物随代码一起提交；启动与部署用 `npm run db:migrate`（`migrate deploy`）。不要绕过迁移直接改本地库文件（`prisma/dev.db` 由 `*.db` 规则忽略）。
+- 接口契约：新增或修改接口时同步更新 `packages/shared` 中的 `*Dto` 类型与 `ERROR_CODES` 错误码，保持前后端一致；新增环境变量时同步写入 `.env.example`（`.env` 不提交）。
+- 分支：不要在 `main` 上直接提交；每个工单/需求使用独立分支，合并前先 rebase 到目标分支。
