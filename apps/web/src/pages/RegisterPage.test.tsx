@@ -40,7 +40,7 @@ describe('RegisterPage', () => {
       </MemoryRouter>,
     );
     const button = screen.getByRole('button', { name: '注册' });
-    const help = screen.getByText('注册详细说明，------你需要到百度去查看文档----！！！！');
+    const help = screen.getByText('----去上面查看怎么用-----');
     expect(help).toBeInTheDocument();
     // 文案与按钮同父容器且 DOM 顺序在按钮之后；视觉上的「右侧」由 e2e 截图验证
     expect(help.parentElement).toBe(button.parentElement);
