@@ -46,4 +46,18 @@ describe('RegisterPage', () => {
     expect(help.parentElement).toBe(button.parentElement);
     expect(button.compareDocumentPosition(help) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
   });
+
+  it('shows 增加叶宇皓的测试 to the right of the submit button', () => {
+    render(
+      <MemoryRouter>
+        <RegisterPage />
+      </MemoryRouter>,
+    );
+    const button = screen.getByRole('button', { name: '注册' });
+    const note = screen.getByText('增加叶宇皓的测试');
+    expect(note).toBeInTheDocument();
+    // 文案与按钮同父容器且 DOM 顺序在按钮之后；水平「右侧」由 e2e（auth.spec.ts 的 boundingBox 断言）验证
+    expect(note.parentElement).toBe(button.parentElement);
+    expect(button.compareDocumentPosition(note) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+  });
 });
