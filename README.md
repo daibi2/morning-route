@@ -50,9 +50,9 @@ npm run db:seed
 - `/habits` — 习惯增删归档
 - `/stats` — 今日完成率与近 7 日柱状图
 
-代码格式注意事项，这个非常重要！
-
 ## 编码注意事项
+
+代码格式注意事项，这个非常重要！
 
 具体规范见 `PROJECT_CONTEXT.md` 的「硬性约束」与「运行时规则」；提交前请确保 `npm run lint` 与 `npm test` 均通过。
 
